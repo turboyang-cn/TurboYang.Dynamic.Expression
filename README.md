@@ -45,3 +45,5 @@ ExpressionContext context = new ExpressionContext(new {
 
 Int32 result = compiler.Evaluate<Int32>(expression, context);      // result == 9
 ```
+
+## Usage: Function expression
