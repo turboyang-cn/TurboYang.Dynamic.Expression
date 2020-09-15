@@ -7,6 +7,7 @@ namespace TurboYang.Dynamic.Expression.Expressions
         public override String Pattern => @"^\w+$";
         public String VariableName { get; private set; }
         public dynamic VariableValue { get; private set; }
+        internal override Int32 Order => Int32.MinValue;
 
         public void Bind(String variableName)
         {

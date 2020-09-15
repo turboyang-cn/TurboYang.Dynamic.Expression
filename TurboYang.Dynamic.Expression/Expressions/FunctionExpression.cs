@@ -10,6 +10,7 @@ namespace TurboYang.Dynamic.Expression.Expressions
         public abstract Int32 ParameterCount { get; }
         protected abstract String Name { get; }
         public sealed override Int32 Priority => 14;
+        public override String Pattern => $"^{Name}$";
 
         protected List<BaseExpression> InternalOperands { get; } = new List<BaseExpression>();
 
@@ -39,6 +40,16 @@ namespace TurboYang.Dynamic.Expression.Expressions
             }
 
             IsBound = true;
+        }
+
+        public override Object Evaluate(ExpressionContext context)
+        {
+            for (Int32 i = 0; i < ParameterCount; i++)
+            {
+                InternalOperandValues.Add(InternalOperands[i].Evaluate(context));
+            }
+
+            return null;
         }
 
         public override String VisualExpression

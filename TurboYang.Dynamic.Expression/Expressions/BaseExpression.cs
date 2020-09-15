@@ -10,6 +10,7 @@ namespace TurboYang.Dynamic.Expression.Expressions
         public abstract String VisualExpression { get; }
         public abstract String VisualSubstitutedExpression { get; }
         public virtual Int32 Priority { get; } = 0;
+        internal virtual Int32 Order { get; } = 0;
 
         public abstract Object Evaluate(ExpressionContext context);
 

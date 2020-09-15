@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using TurboYang.Dynamic.Expression.Expressions;
 
@@ -10,11 +11,43 @@ namespace TurboYang.Dynamic.Expression
 {
     public sealed class ExpressionCompiler
     {
-        private ReadOnlyDictionary<Regex, Type> Associations { get; }
+        private class Association
+        {
+            public Association(Type type, Regex regex, Int32 order)
+            {
+                Type = type;
+                Regex = regex;
+                Order = order;
+            }
+
+            public Regex Regex { get; }
+            public Type Type { get; }
+            public Int32 Order { get; } 
+        }
+
+        private List<Association> Associations { get; } = new List<Association>();
 
         public ExpressionCompiler()
         {
-            Associations = new ReadOnlyDictionary<Regex, Type>(Assembly.GetExecutingAssembly().GetTypes().Where(Type => !Type.IsAbstract && Type.IsSubclassOf(typeof(BaseExpression)) && Type != typeof(NullExpression)).ToDictionary(Type => new Regex((Activator.CreateInstance(Type) as BaseExpression).Pattern)));
+            RegisterExpression(Assembly.GetExecutingAssembly());
+        }
+
+        public void RegisterExpression(Type expressionType)
+        {
+            if (Activator.CreateInstance(expressionType) is BaseExpression expression)
+            {
+                Association association = new Association(expressionType, new Regex(expression.Pattern), expression.Order);
+
+                Associations.Add(association);
+            }
+        }
+
+        public void RegisterExpression(Assembly assembly)
+        {
+            foreach (Type expressionType in assembly.GetTypes().Where(Type => !Type.IsAbstract && Type.IsSubclassOf(typeof(BaseExpression)) && Type != typeof(NullExpression)))
+            {
+                RegisterExpression(expressionType);
+            }
         }
 
         public Object Evaluate(String expression, ExpressionContext context)
@@ -108,12 +141,12 @@ namespace TurboYang.Dynamic.Expression
                     {
                         effectiveToken = token;
 
-                        foreach (KeyValuePair<Regex, Type> association in Associations)
+                        foreach (Association association in Associations.OrderByDescending(x => x.Order))
                         {
-                            if (association.Key.IsMatch(token))
+                            if (association.Regex.IsMatch(token))
                             {
                                 isMatched = true;
-                                expressions.Add(CreateExpression(token, association.Value));
+                                expressions.Add(CreateExpression(token, association.Type));
                                 i += j - 1;
                                 break;
                             }
