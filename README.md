@@ -121,7 +121,7 @@ ExpressionContext context = new ExpressionContext(new
 Decimal result = compiler.Evaluate<Decimal>(expression, context);      // result == 6.28318530717958
 ```
 
-Built in expression
+## Built in expression
 | Expression | Symbol | Example |
 | ---- | ---------- | --------- |
 | Addition | + | x + y |
