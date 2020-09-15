@@ -21,29 +21,69 @@ Decimal result = compiler.Evaluate<Decimal>(expression, context);      // result
 
 ## Usage: Expression with parameters
 ``` CSharp
-String expression = @"(X + Y) * Z;";
+String expression = @"(x + y) * z;";
 
 ExpressionCompiler compiler = new ExpressionCompiler();
 ExpressionContext context = new ExpressionContext();
 
-context.Bind("X", 1);
-context.Bind("Y", 2);
-context.Bind("Z", 3);
+context.Bind("x", 1);
+context.Bind("y", 2);
+context.Bind("z", 3);
 
 Int32 result = compiler.Evaluate<Int32>(expression, context);      // result == 9
 ```
 You can also bind parameters through anonymous class.
 ``` CSharp
-String expression = @"(X + Y) * Z;";
+String expression = @"(x + y) * z;";
 
 ExpressionCompiler compiler = new ExpressionCompiler();
 ExpressionContext context = new ExpressionContext(new {
-    X = 1,
-    Y = 2,
-    Z = 3
+    x = 1,
+    y = 2,
+    z = 3
 });
 
 Int32 result = compiler.Evaluate<Int32>(expression, context);      // result == 9
 ```
 
 ## Usage: Function expression
+``` CSharp
+String expression = @"Pow(2, 3);";
+
+ExpressionCompiler compiler = new ExpressionCompiler();
+ExpressionContext context = new ExpressionContext();
+
+Decimal result = compiler.Evaluate<Decimal>(expression, context);      // result == 8
+```
+
+## Usage: Constant expression
+``` CSharp
+String expression = @"PI * Pow(r, 2);";
+
+ExpressionCompiler compiler = new ExpressionCompiler();
+ExpressionContext context = new ExpressionContext(new {
+    r = 10;
+});
+
+Decimal result = compiler.Evaluate<Decimal>(expression, context);      // result == 314.159265358979
+```
+
+## Usage: Intervening variable
+``` CSharp
+String expression = @"x = a + b; y = c + d; x * y";
+
+ExpressionCompiler compiler = new ExpressionCompiler();
+ExpressionContext context = new ExpressionContext(new {
+    a = 1,
+    b = 2,
+    c = 3,
+    d = 4
+});
+
+Int32 result = compiler.Evaluate<Int32>(expression, context);      // result == 21
+```
+You can call ExpressionContext.Lookup Method to get the intervening variable value.
+``` CSharp
+Int32 x = context.Lookup<Int32>("x");         // 3
+Int32 y = context.Lookup<Int32>("y");         // 7
+```
