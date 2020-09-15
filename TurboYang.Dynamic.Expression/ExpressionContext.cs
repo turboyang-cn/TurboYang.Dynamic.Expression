@@ -1,11 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Dynamic;
+using System.Reflection;
 
 namespace TurboYang.Dynamic.Expression
 {
     public sealed class ExpressionContext
     {
+        public ExpressionContext()
+            : this(new { })
+        {
+        }
+
+        public ExpressionContext(Object context)
+        {
+            if (context == null)
+            {
+                return;
+            }
+
+            foreach (PropertyInfo propertyInfo in context.GetType().GetProperties())
+            {
+                Bind(propertyInfo.Name, (dynamic)propertyInfo.GetValue(context));
+            }
+        }
+
         private Dictionary<String, Object> InternalVariables { get; } = new Dictionary<String, Object>();
 
         public ReadOnlyDictionary<String, Object> Variables
