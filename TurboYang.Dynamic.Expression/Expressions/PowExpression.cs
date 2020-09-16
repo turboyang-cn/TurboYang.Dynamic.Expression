@@ -11,7 +11,7 @@ namespace TurboYang.Dynamic.Expression.Expressions
         {
             base.Evaluate(context);
 
-            return Math.Pow(OperandValues[0], OperandValues[1]);
+            return (Decimal)Math.Pow((Double)OperandValues[0], (Double)OperandValues[1]);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace TurboYang.Dynamic.Expression.Expressions
 
         public override Object Evaluate(ExpressionContext Context)
         {
-            return Math.E;
+            return (Decimal)Math.E;
         }
 
         public override String VisualExpression => Math.E.ToString();
