@@ -37,7 +37,8 @@ You can also bind parameters through anonymous class.
 String expression = @"(x + y) * z;";
 
 ExpressionCompiler compiler = new ExpressionCompiler();
-ExpressionContext context = new ExpressionContext(new {
+ExpressionContext context = new ExpressionContext(new 
+{
     x = 1,
     y = 2,
     z = 3
