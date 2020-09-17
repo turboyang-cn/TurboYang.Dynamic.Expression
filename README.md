@@ -62,7 +62,8 @@ Decimal result = compiler.Evaluate<Decimal>(expression, context);      // result
 String expression = @"PI * Pow(r, 2);";
 
 ExpressionCompiler compiler = new ExpressionCompiler();
-ExpressionContext context = new ExpressionContext(new {
+ExpressionContext context = new ExpressionContext(new 
+{
     r = 10;
 });
 
@@ -74,7 +75,8 @@ Decimal result = compiler.Evaluate<Decimal>(expression, context);      // result
 String expression = @"x = a + b; y = c + d; x * y";
 
 ExpressionCompiler compiler = new ExpressionCompiler();
-ExpressionContext context = new ExpressionContext(new {
+ExpressionContext context = new ExpressionContext(new 
+{
     a = 1,
     b = 2,
     c = 3,
